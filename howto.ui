@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>HowTo</class>
+ <widget class="QDialog" name="HowTo">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>450</width>
+    <height>430</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>450</width>
+    <height>430</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>450</width>
+    <height>430</height>
+   </size>
+  </property>
+  <property name="font">
+   <font>
+    <family>微软雅黑</family>
+    <pointsize>10</pointsize>
+   </font>
+  </property>
+  <property name="windowTitle">
+   <string>使用说明</string>
+  </property>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>10</y>
+     <width>411</width>
+     <height>391</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>使用说明:
+
+1. 填写想要冲关的 flags 范围, 以及其它必要信息.
+
+2. 指定难度系数, 0% 代表最最简单(难度关最少), 100% 代表最困难(难度关最多). 难度关的默认定义为红眼关, 可在设置中修改.
+
+3. 点击[计算], 得到结果; 点击[查看详情], 查看该种子的出怪详情.
+
+4. 每次计算时, 程序会提供多个符合条件的类似种子. 玩家也可以自行输入种子并查看详情.
+
+5. 可在设置界面中修改种子搜索范围, 难度关定义, 种子输出个数等.</string>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
