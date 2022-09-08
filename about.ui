@@ -93,7 +93,7 @@
     <item>
      <widget class="QLabel" name="col2">
       <property name="text">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/Rottenham/seed-finder&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Rottenham / seed-finder&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://space.bilibili.com/8252252&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Crescendo&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Qt 5.12.9 (MSVC 2017, 64bit)&lt;/p&gt;&lt;p&gt;Enigma Virtual Box 9.90&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/Kndy666/zombie_calculator&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Kndy666 / zombie_calculator&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/Rottenham/seed-finder-qt&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Rottenham / seed-finder-qt&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://space.bilibili.com/8252252&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Crescendo&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Qt 5.12.9 (MSVC 2017, 64bit)&lt;/p&gt;&lt;p&gt;Enigma Virtual Box 9.90&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/Kndy666/zombie_calculator&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Kndy666 / zombie_calculator&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="textFormat">
        <enum>Qt::RichText</enum>

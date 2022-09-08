@@ -209,11 +209,11 @@ void SeedCalc::add_seed_info(uint32_t seed, int count)
 
 void SeedCalc::calc_thread(uint32_t seed_start, int step, int code)
 {
-    uint32_t seed = seed_start;
+    uint64_t seed = seed_start;
     int prev_val = 0;
     while (seed < seed_end) {
-        int count = single_seed(seed, mask, uid, mode, scene, level_start, level_end);
-        add_seed_info(seed, count);
+        int count = single_seed(uint32_t(seed), mask, uid, mode, scene, level_start, level_end);
+        add_seed_info(uint32_t(seed), count);
         seed += step;
         if (code == 1) {
             int cur_val = int((seed - seed_start) * 100.0 / (seed_end - seed_start));

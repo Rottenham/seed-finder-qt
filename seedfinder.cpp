@@ -10,6 +10,7 @@
 #include <QApplication>
 #include <QRandomGenerator>
 #include <QDate>
+#include <QClipboard>
 #include <algorithm>
 #include <iostream>
 #include <sstream>
@@ -251,13 +252,15 @@ void SeedFinder::on_calc_clicked()
     // modify ui
     ui->calc->setText(QString::fromLocal8Bit("计算中..."));
     ui->seeds->clear();
+    ui->progressBar->setValue(0);
     set_all_widgets_availability(false);
+    qApp->processEvents();
 
     // get seed range
-    int seed_start = setting_page->_seed_start;
+    uint32_t seed_start = setting_page->_seed_start;
     uint64_t divisor = SEED_TOTAL - setting_page->_seed_span + 2;
     if (setting_page->_start_at_random_seed) seed_start = QRandomGenerator::global()->generate() % divisor;
-    int seed_end = seed_start + setting_page->_seed_span; // 不包含end
+    uint64_t seed_end = seed_start + setting_page->_seed_span; // 不包含end
     int mask = get_mask();
 
     // start calculation
@@ -307,4 +310,17 @@ void SeedFinder::show_result(std::vector<SeedInfo> result)
         ui->seeds->addItem(QString::fromStdString(ss.str()));
     }
     if (table_page->isVisible()) show_detail(false);
+}
+
+void SeedFinder::on_copy_clicked()
+{
+    QClipboard *clipboard = QGuiApplication::clipboard();
+    clipboard->setText(ui->seeds->currentText());
+}
+
+void SeedFinder::on_clear_clicked()
+{
+    ui->seeds->clear();
+    ui->seeds->setCurrentText("");
+    ui->progressBar->setValue(0);
 }

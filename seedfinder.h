@@ -41,6 +41,10 @@ private slots:
 
     void on_calc_clicked();
 
+    void on_copy_clicked();
+
+    void on_clear_clicked();
+
 private:
     void show_child_window(QWidget *dialog);
     void update_end_flags();

@@ -53,7 +53,7 @@ class SeedCalc : public QObject
 public:
     std::vector<std::array<bool, 20>> view_detail();
     SeedCalc(int uid, int mode, int scene, int level_start, int level_end, uint32_t seed_start,
-             uint32_t seed_end, int mask, int output_size, QObject *parent = nullptr)
+             uint64_t seed_end, int mask, int output_size, QObject *parent = nullptr)
         : QObject(parent)
     {
         this->uid = uid;
@@ -85,7 +85,8 @@ private:
     void calc_thread(uint32_t seed_start, int step, int code);
     void add_seed_info(uint32_t seed, int count);
     int uid, mode, level_start, level_end, scene, mask, output_size, seed = 0;
-    uint32_t seed_start, seed_end = 0;
+    uint32_t seed_start = 0;
+    uint64_t seed_end = 0;
     std::vector<SeedInfo> result;
     std::mutex mtx;
 };
