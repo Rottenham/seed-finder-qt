@@ -207,29 +207,38 @@ void SeedCalc::add_seed_info(uint32_t seed, int count)
     mtx.unlock();
 }
 
-void SeedCalc::calc_thread(uint32_t seed_start, int step)
+void SeedCalc::calc_thread(uint32_t seed_start, int step, int code)
 {
     uint32_t seed = seed_start;
-    while (!stopThread && seed < seed_end) {
+    int prev_val = 0;
+    while (seed < seed_end) {
         int count = single_seed(seed, mask, uid, mode, scene, level_start, level_end);
         add_seed_info(seed, count);
         seed += step;
+        if (code == 1) {
+            int cur_val = int((seed - seed_start) * 100.0 / (seed_end - seed_start));
+            if (cur_val != prev_val) {
+                prev_val = cur_val;
+                mtx.lock();
+                emit progress_updated(cur_val);
+                mtx.unlock();
+            }
+        }
     }
 }
 
-std::vector<SeedInfo> SeedCalc::calc()
+void SeedCalc::calc()
 {
     result.clear();
     int num = std::thread::hardware_concurrency();
-    std::cout << "thread num = " << num << "\n";
     std::vector<std::thread> threadList;
     for (int i = 0; i < num; ++i) {
-        threadList.push_back(std::thread(&SeedCalc::calc_thread, this, i + seed_start, num));
+        threadList.push_back(std::thread(&SeedCalc::calc_thread, this, i + seed_start, num, i));
     }
     for (int i = 0; i < num; ++i) {
         threadList[i].join();
     }
-    return result;
+    emit output_result(result);
 }
 
 std::vector<std::array<bool, 20>> SeedCalc::view_detail()

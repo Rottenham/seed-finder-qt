@@ -16,7 +16,7 @@ public:
     ~About();
 
 private:
-    Ui::About *ui;
+    Ui::About *ui = nullptr;
 };
 
 #endif // ABOUT_H

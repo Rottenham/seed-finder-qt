@@ -46,7 +46,7 @@
      <x>0</x>
      <y>0</y>
      <width>401</width>
-     <height>281</height>
+     <height>306</height>
     </rect>
    </property>
    <layout class="QGridLayout" name="gridLayout">
@@ -65,22 +65,15 @@
     <property name="spacing">
      <number>10</number>
     </property>
-    <item row="3" column="2" colspan="2">
-     <widget class="QRadioButton" name="seed_logic_rnd">
+    <item row="8" column="0" colspan="5">
+     <widget class="QLabel" name="label_5">
       <property name="text">
-       <string>随机</string>
+       <string>同时出现以下僵尸时, 定义为&quot;难度关&quot;:</string>
       </property>
      </widget>
     </item>
-    <item row="0" column="0" colspan="2">
-     <widget class="QLabel" name="label">
-      <property name="text">
-       <string>每次寻找的种子总数: </string>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="0" colspan="4">
-     <spacer name="horizontalSpacer">
+    <item row="7" column="0" colspan="5">
+     <spacer name="horizontalSpacer_3">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
@@ -95,31 +88,24 @@
       </property>
      </spacer>
     </item>
-    <item row="8" column="0" colspan="4">
-     <widget class="QLabel" name="label_5">
+    <item row="0" column="2" colspan="3">
+     <widget class="QLineEdit" name="seed_total_val"/>
+    </item>
+    <item row="3" column="2" colspan="3">
+     <widget class="QRadioButton" name="seed_logic_rnd">
       <property name="text">
-       <string>同时出现以下僵尸时, 定义为&quot;难度关&quot;:</string>
+       <string>随机</string>
       </property>
      </widget>
     </item>
-    <item row="4" column="3">
-     <widget class="QLineEdit" name="seed_logic_val"/>
-    </item>
-    <item row="6" column="0" colspan="2">
-     <widget class="QLabel" name="label_6">
+    <item row="0" column="0" colspan="2">
+     <widget class="QLabel" name="label">
       <property name="text">
-       <string>每次输出多少个种子: </string>
+       <string>每次寻找的种子总数: </string>
       </property>
      </widget>
     </item>
-    <item row="3" column="0" colspan="2">
-     <widget class="QLabel" name="label_4">
-      <property name="text">
-       <string>从哪个种子开始遍历: </string>
-      </property>
-     </widget>
-    </item>
-    <item row="5" column="0" colspan="4">
+    <item row="5" column="0" colspan="5">
      <spacer name="horizontalSpacer_2">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
@@ -135,21 +121,8 @@
       </property>
      </spacer>
     </item>
-    <item row="4" column="2">
-     <widget class="QRadioButton" name="seed_logic_fxd">
-      <property name="text">
-       <string>固定值</string>
-      </property>
-     </widget>
-    </item>
-    <item row="6" column="2" colspan="2">
-     <widget class="QLineEdit" name="output_size"/>
-    </item>
-    <item row="0" column="2" colspan="2">
-     <widget class="QLineEdit" name="seed_total_val"/>
-    </item>
-    <item row="7" column="0" colspan="4">
-     <spacer name="horizontalSpacer_3">
+    <item row="2" column="0" colspan="5">
+     <spacer name="horizontalSpacer">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
@@ -163,6 +136,40 @@
        </size>
       </property>
      </spacer>
+    </item>
+    <item row="6" column="2" colspan="3">
+     <widget class="QLineEdit" name="output_size"/>
+    </item>
+    <item row="3" column="0" colspan="2">
+     <widget class="QLabel" name="label_4">
+      <property name="text">
+       <string>从哪个种子开始遍历: </string>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="0" colspan="2">
+     <widget class="QLabel" name="label_6">
+      <property name="text">
+       <string>每次输出多少个种子: </string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="4">
+     <widget class="QLineEdit" name="seed_logic_val"/>
+    </item>
+    <item row="4" column="2">
+     <widget class="QRadioButton" name="seed_logic_fxd">
+      <property name="text">
+       <string>定值</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="3">
+     <widget class="QLabel" name="label_2">
+      <property name="text">
+       <string>0x</string>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>
@@ -326,7 +333,7 @@
      </widget>
     </item>
     <item row="2" column="1">
-     <widget class="QCheckBox" name="checkBox">
+     <widget class="QCheckBox" name="checkBox_1">
       <property name="text">
        <string>路障</string>
       </property>

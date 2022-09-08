@@ -23,10 +23,10 @@ public:
     void update_contents(std::vector<std::array<bool, 20>> data, int start_flags, int scene, std::vector<bool> zombie_flags, bool bring_to_front);
 
 private:
-    Ui::Table *ui;
-    class QTableWidget *table;
-    class QGridLayout *main_layout;
-    class QLabel *m_label;
+    Ui::Table *ui = nullptr;
+    class QTableWidget *table = nullptr;
+    class QGridLayout *main_layout = nullptr;
+    class QLabel *m_label = nullptr;
     void move_to_screen_center(int expected_width, int expected_height);
 
     // std::vector<int> get_show_list(int scene);

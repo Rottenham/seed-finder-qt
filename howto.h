@@ -16,7 +16,7 @@ public:
     ~HowTo();
 
 private:
-    Ui::HowTo *ui;
+    Ui::HowTo *ui = nullptr;
 };
 
 #endif // HOWTO_H

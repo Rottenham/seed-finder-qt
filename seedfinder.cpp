@@ -20,6 +20,7 @@ SeedFinder::SeedFinder(QWidget *parent)
     , ui(new Ui::SeedFinder)
 {
     ui->setupUi(this);
+    qRegisterMetaType<std::vector<SeedInfo>>("std::vector<SeedInfo>");
 
     // add validators
     QRegExp rx_2_digit("[1-9]\\d{0,1}");
@@ -52,6 +53,8 @@ SeedFinder::SeedFinder(QWidget *parent)
 
 SeedFinder::~SeedFinder()
 {
+    m_workThread.quit();
+    m_workThread.wait();
     delete ui;
 }
 
@@ -120,12 +123,13 @@ void SeedFinder::set_all_widgets_availability(bool flag)
     for (auto w : {ui->scenes, ui->seeds}) {
         w->setEnabled(flag);
     }
+    ui->menubar->setEnabled(flag);
     ui->hardness_slider->setEnabled(flag);
 }
 
 void SeedFinder::show_warning(const char *title, const char *msg)
 {
-    QMessageBox Msgbox;
+    QMessageBox Msgbox(this);
     Msgbox.setWindowTitle(QString::fromLocal8Bit(title));
     Msgbox.setIcon(QMessageBox::Information);
     Msgbox.setText(QString::fromLocal8Bit(msg));
@@ -218,45 +222,6 @@ int SeedFinder::get_scene()
     return scenes[ui->scenes->currentIndex()];
 }
 
-void SeedFinder::on_calc_toggled(bool checked)
-{
-    if (checked) {
-        if (!check_inputs()) {
-            ui->calc->setChecked(false);
-            return;
-        }
-
-        // modify ui
-        ui->calc->setText(QString::fromLocal8Bit("计算中..."));
-        ui->seeds->clear();
-        set_all_widgets_availability(false);
-        qApp->processEvents();
-
-        // get seed range
-        int seed_start = setting_page->_seed_start;
-        if (setting_page->_start_at_random_seed) seed_start = QRandomGenerator::global()->generate() % (inv - setting_page->_seed_span + 2);
-        int seed_end = seed_start + setting_page->_seed_span; // 不包含end
-        int mask = get_mask();
-
-        // start calculation
-        SeedCalc sc(ui->uid->text().toInt(), ui->mode->text().toInt(), get_scene(), ui->start_flags->text().toInt() / 2, ui->end_flags->text().toInt() / 2,
-                    seed_start, seed_end, mask, 5);
-        auto result = sc.calc();
-        auto list = get_seeds_from_result(result, ui->hardness->text().toInt(), setting_page->_output_size);
-
-        // print result
-        ui->calc->setChecked(false);
-        ui->calc->setText(QString::fromLocal8Bit("计算"));
-        set_all_widgets_availability(true);
-        for (auto r : list) {
-            std::ostringstream ss;
-            ss << std::setfill('0') << std::setw(8) << std::hex << std::uppercase << r;
-            ui->seeds->addItem(QString::fromStdString(ss.str()));
-        }
-        if (table_page->isVisible()) show_detail(false);
-    }
-}
-
 bool SeedFinder::check_current_seed()
 {
     if (ui->seeds->currentText().isEmpty()) {
@@ -276,6 +241,38 @@ void SeedFinder::on_detail_clicked()
     show_detail(true);
 }
 
+void SeedFinder::on_calc_clicked()
+{
+    if (!check_inputs()) {
+        ui->calc->setChecked(false);
+        return;
+    }
+
+    // modify ui
+    ui->calc->setText(QString::fromLocal8Bit("计算中..."));
+    ui->seeds->clear();
+    set_all_widgets_availability(false);
+
+    // get seed range
+    int seed_start = setting_page->_seed_start;
+    uint64_t divisor = SEED_TOTAL - setting_page->_seed_span + 2;
+    if (setting_page->_start_at_random_seed) seed_start = QRandomGenerator::global()->generate() % divisor;
+    int seed_end = seed_start + setting_page->_seed_span; // 不包含end
+    int mask = get_mask();
+
+    // start calculation
+    if (m_worker != nullptr) delete m_worker;
+    m_worker = new SeedCalc(ui->uid->text().toInt(), ui->mode->text().toInt(), get_scene(), ui->start_flags->text().toInt() / 2, ui->end_flags->text().toInt() / 2,
+                            seed_start, seed_end, mask, 5);
+    m_worker->moveToThread(&m_workThread);
+    connect(this, SIGNAL(start_worker_calc()), m_worker, SLOT(calc()));
+    connect(&m_workThread, SIGNAL(finished()), m_worker, SLOT(deleteLater()));
+    connect(m_worker, SIGNAL(progress_updated(int)), this, SLOT(update_progress_bar(int)));
+    connect(m_worker, SIGNAL(output_result(std::vector<SeedInfo>)), this, SLOT(show_result(std::vector<SeedInfo>)));
+    m_workThread.start();
+    emit start_worker_calc();
+}
+
 void SeedFinder::show_detail(bool bring_to_front)
 {
     // get seed
@@ -290,3 +287,24 @@ void SeedFinder::show_detail(bool bring_to_front)
     table_page->update_contents(result, ui->start_flags->text().toInt(), get_scene(), setting_page->_zombie_flags, bring_to_front);
 }
 
+void SeedFinder::update_progress_bar(int val)
+{
+    if (val < 0) val = 0;
+    if (val > 100) val = 100;
+    ui->progressBar->setValue(val);
+}
+
+void SeedFinder::show_result(std::vector<SeedInfo> result)
+{
+    auto list = get_seeds_from_result(result, ui->hardness->text().toInt(), setting_page->_output_size);
+
+    // print result
+    ui->calc->setText(QString::fromLocal8Bit("计算"));
+    set_all_widgets_availability(true);
+    for (auto r : list) {
+        std::ostringstream ss;
+        ss << std::setfill('0') << std::setw(8) << std::hex << std::uppercase << r;
+        ui->seeds->addItem(QString::fromStdString(ss.str()));
+    }
+    if (table_page->isVisible()) show_detail(false);
+}

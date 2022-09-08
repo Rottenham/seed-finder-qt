@@ -2,6 +2,8 @@
 #define SEEDFINDER_H
 
 #include <QMainWindow>
+#include <QThread>
+#include "worker.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class SeedFinder; }
@@ -16,7 +18,11 @@ class SeedFinder : public QMainWindow
 public:
     SeedFinder(QWidget *parent = nullptr);
     ~SeedFinder();
-
+signals:
+    void start_worker_calc();
+public slots:
+    void update_progress_bar(int val);
+    void show_result(std::vector<SeedInfo> result);
 private slots:
     void on_detailedSetting_triggered();
     void on_howToUse_triggered();
@@ -31,9 +37,9 @@ private slots:
 
     void on_hardness_slider_valueChanged(int value);
 
-    void on_calc_toggled(bool checked);
-
     void on_detail_clicked();
+
+    void on_calc_clicked();
 
 private:
     void show_child_window(QWidget *dialog);
@@ -45,11 +51,13 @@ private:
     bool check_current_seed();
     int get_mask();
     void show_detail(bool bring_to_front);
-    Ui::SeedFinder *ui;
-    class Setting *setting_page;
-    class HowTo *howto_page;
-    class About *about_page;
-    class Table *table_page;
+    Ui::SeedFinder *ui = nullptr;
+    class Setting *setting_page = nullptr;
+    class HowTo *howto_page = nullptr;
+    class About *about_page = nullptr;
+    class Table *table_page = nullptr;
 
+    QThread m_workThread;
+    class SeedCalc *m_worker = nullptr;
 };
 #endif // SEEDFINDER_H
