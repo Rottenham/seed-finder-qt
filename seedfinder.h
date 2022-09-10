@@ -23,6 +23,7 @@ signals:
 public slots:
     void update_progress_bar(int val);
     void show_result(std::vector<SeedInfo> result);
+    void update_debug_info(QString str);
 private slots:
     void on_detailedSetting_triggered();
     void on_howToUse_triggered();

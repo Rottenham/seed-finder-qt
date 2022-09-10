@@ -44,6 +44,8 @@ SeedFinder::SeedFinder(QWidget *parent)
     ui->scenes->addItems({"DE", "NE", "PE/FE", "RE/ME", "MGE/AQE"});
     ui->scenes->setCurrentIndex(2);
 
+    this->adjustSize();
+
     // create child pages
     setting_page = new Setting(this);
     howto_page = new HowTo();
@@ -54,6 +56,7 @@ SeedFinder::SeedFinder(QWidget *parent)
 
 SeedFinder::~SeedFinder()
 {
+    if (m_worker != nullptr) m_worker->stop();
     m_workThread.quit();
     m_workThread.wait();
     delete ui;
@@ -159,8 +162,8 @@ std::vector<uint32_t> get_seeds_from_result(std::vector<SeedInfo> &result, int h
     total = uint64_t(total / 100.0 * hardness);
     uint64_t count = 0;
     int idx = 0;
-    while (idx < int(result.size())) {
-        count += result.at(idx).seed_count;
+    for (auto &&r : result) {
+        count += r.seed_count;
         if (count >= total) break;
         ++idx;
     }
@@ -266,14 +269,20 @@ void SeedFinder::on_calc_clicked()
     // start calculation
     if (m_worker != nullptr) delete m_worker;
     m_worker = new SeedCalc(ui->uid->text().toInt(), ui->mode->text().toInt(), get_scene(), ui->start_flags->text().toInt() / 2, ui->end_flags->text().toInt() / 2,
-                            seed_start, seed_end, mask, 5);
+                            seed_start, seed_end, mask, setting_page->_output_size);
     m_worker->moveToThread(&m_workThread);
     connect(this, SIGNAL(start_worker_calc()), m_worker, SLOT(calc()));
     connect(&m_workThread, SIGNAL(finished()), m_worker, SLOT(deleteLater()));
     connect(m_worker, SIGNAL(progress_updated(int)), this, SLOT(update_progress_bar(int)));
     connect(m_worker, SIGNAL(output_result(std::vector<SeedInfo>)), this, SLOT(show_result(std::vector<SeedInfo>)));
+    connect(m_worker, SIGNAL(show_debug_info(QString)), this, SLOT(update_debug_info(QString)));
     m_workThread.start();
     emit start_worker_calc();
+}
+
+void SeedFinder::update_debug_info(QString str)
+{
+    ui->label_1->setText(str);
 }
 
 void SeedFinder::show_detail(bool bring_to_front)
@@ -304,6 +313,7 @@ void SeedFinder::show_result(std::vector<SeedInfo> result)
     // print result
     ui->calc->setText(QString::fromLocal8Bit("计算"));
     set_all_widgets_availability(true);
+    ui->progressBar->setValue(100);
     for (auto r : list) {
         std::ostringstream ss;
         ss << std::setfill('0') << std::setw(8) << std::hex << std::uppercase << r;

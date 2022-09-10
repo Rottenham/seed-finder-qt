@@ -17,10 +17,10 @@ public:
     void show_setting();
 
     // config
-    int _output_size = 5;
+    int _output_size = 10;
     bool _start_at_random_seed = true;
     uint32_t _seed_start = 0;
-    uint64_t _seed_span = 1000;
+    uint64_t _seed_span = 1000000;
     std::vector<bool> _zombie_flags;
 
 private slots:

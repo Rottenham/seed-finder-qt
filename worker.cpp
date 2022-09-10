@@ -5,6 +5,7 @@
 #include <array>
 #include <bitset>
 
+
 class d_page
 {
 public:
@@ -176,54 +177,82 @@ public:
     }
 };
 
-int single_seed(uint32_t seed, int mask, int uid, int mode, int scene, int begin, int end)
+// r_val = (offset(uid + mode) + seed) * inv
+int single_seed(uint32_t r_val, d_page &p, int mask, int begin, int end)
 {
-    d_page p1(scene);
-    uint32_t l = (seed + uid + mode) * inv + begin;
+    uint32_t l = r_val + begin;
     int count = 0;
     for (int i = begin; i < end; i++, l++) {
-        int t = p1.get(l, i);
+        int t = p.get(l, i);
         if ((t & mask) == mask) ++count;
     }
     return count;
 }
 
-void SeedCalc::add_seed_info(uint32_t seed, int count)
+void SeedCalc::add_seed_info(uint16_t *seed_count_lst, uint32_t size, uint32_t r_val_min)
 {
     mtx.lock();
-    bool found = false;
-    for (auto &info : result) {
-        if (info.count == count) {
-            found = true;
-            ++info.seed_count;
-            if (info.seed_count <= output_size)
-                info.seeds.push_back(seed);
-            break;
+    uint32_t r_val = r_val_min;
+    uint32_t idx = 0;
+    for (auto it = seed_count_lst; idx < size; ++it, ++r_val, ++idx) {
+        auto count = *it;
+        bool found = false;
+        for (auto &info : result) {
+            if (info.count == count) {
+                found = true;
+                ++info.seed_count;
+                if (int(info.seed_count) <= output_size)
+                    info.seeds.push_back(r_val * 101 - offset);
+                break;
+            }
         }
-    }
-    if (!found) {
-        result.push_back(SeedInfo(count, {seed}, 1));
+        if (!found) {
+            result.push_back(SeedInfo(count, {r_val * 101 - offset}, 1));
+        }
     }
     mtx.unlock();
 }
 
-void SeedCalc::calc_thread(uint32_t seed_start, int step, int code)
+task SeedCalc::get()
 {
-    uint64_t seed = seed_start;
-    int prev_val = 0;
-    while (seed < seed_end) {
-        int count = single_seed(uint32_t(seed), mask, uid, mode, scene, level_start, level_end);
-        add_seed_info(uint32_t(seed), count);
-        seed += step;
-        if (code == 1) {
-            int cur_val = int((seed - seed_start) * 100.0 / (seed_end - seed_start));
-            if (cur_val != prev_val) {
-                prev_val = cur_val;
-                mtx.lock();
-                emit progress_updated(cur_val);
-                mtx.unlock();
-            }
+    if (rest == 0 || stop_flag) return task(0, 0);
+    uint32_t begin = cur;
+    uint32_t end = ((cur >> d_page::LENGTH) + 64) << d_page::LENGTH;
+    cur = end;
+    uint32_t length = end - begin;
+    if (length >= rest) {
+        end = begin + rest;
+        length = rest;
+    }
+    rest -= length;
+    bool progress_flag = false;
+    while (rest <= nxt_disp) {
+        progress_flag = true;
+        ++progress;
+        nxt_disp -= block;
+    }
+    if (progress_flag) {
+        emit progress_updated(progress);
+    }
+    return task(begin, end);
+}
+
+void SeedCalc::work()
+{
+    d_page p(scene);
+    while (1) {
+        mtx.lock();
+        task t = get();
+        mtx.unlock();
+        auto size = t.end - t.begin;
+        if (size <= 0) break;
+        auto seed_count_list = new uint16_t[size];
+        uint32_t cur = t.begin;
+        for (uint32_t idx = 0; cur != t.end; ++cur, ++idx) {
+            seed_count_list[idx] = single_seed(cur, p, mask, level_start, level_end);
         }
+        add_seed_info(seed_count_list, size, t.begin);
+        delete[] seed_count_list;
     }
 }
 
@@ -231,12 +260,14 @@ void SeedCalc::calc()
 {
     result.clear();
     int num = std::thread::hardware_concurrency();
-    std::vector<std::thread> threadList;
-    for (int i = 0; i < num; ++i) {
-        threadList.push_back(std::thread(&SeedCalc::calc_thread, this, i + seed_start, num, i));
+    std::vector<std::thread> ls;
+    for (int i = 0; i < num; i++) {
+        ls.push_back(std::thread([ = ]() {
+            work();
+        }));
     }
-    for (int i = 0; i < num; ++i) {
-        threadList[i].join();
+    for (int i = 0; i < num; i++) {
+        ls[i].join();
     }
     emit output_result(result);
 }
@@ -245,7 +276,7 @@ std::vector<std::array<bool, 20>> SeedCalc::view_detail()
 {
     std::vector<std::array<bool, 20>> result;
     d_page p1(scene);
-    uint32_t l = (seed + uid + mode) * inv + level_start;
+    uint32_t l = (seed + offset) * inv + level_start;
     for (int i = level_start; i < level_end; ++i, ++l) {
         int t = p1.get(l, i);
         std::array<bool, 20> row;

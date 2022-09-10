@@ -6,30 +6,30 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>600</width>
-    <height>420</height>
+    <width>620</width>
+    <height>440</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>600</width>
-    <height>420</height>
+    <width>620</width>
+    <height>440</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>600</width>
-    <height>420</height>
+    <width>620</width>
+    <height>440</height>
    </size>
   </property>
   <property name="font">
    <font>
     <family>微软雅黑</family>
-    <pointsize>10</pointsize>
+    <pointsize>11</pointsize>
    </font>
   </property>
   <property name="windowTitle">
-   <string>种子寻找器 v1.1</string>
+   <string>种子寻找器 v1.2</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QWidget" name="gridLayoutWidget">
@@ -37,7 +37,7 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>601</width>
+      <width>621</width>
       <height>192</height>
      </rect>
     </property>
@@ -393,8 +393,8 @@
      <rect>
       <x>0</x>
       <y>190</y>
-      <width>601</width>
-      <height>201</height>
+      <width>621</width>
+      <height>221</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_3">
@@ -405,7 +405,7 @@
       <number>20</number>
      </property>
      <property name="bottomMargin">
-      <number>5</number>
+      <number>0</number>
      </property>
      <property name="horizontalSpacing">
       <number>12</number>
@@ -413,21 +413,47 @@
      <property name="verticalSpacing">
       <number>0</number>
      </property>
-     <item row="2" column="5">
-      <spacer name="verticalSpacer_3">
+     <item row="2" column="3" colspan="2">
+      <widget class="QComboBox" name="seeds">
+       <property name="editable">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="0" colspan="7">
+      <spacer name="horizontalSpacer_2">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
        <property name="sizeType">
-        <enum>QSizePolicy::Maximum</enum>
+        <enum>QSizePolicy::Fixed</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
-         <width>58</width>
-         <height>17</height>
+         <width>208</width>
+         <height>13</height>
         </size>
        </property>
       </spacer>
+     </item>
+     <item row="6" column="0" colspan="8">
+      <widget class="QProgressBar" name="progressBar">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>20</height>
+        </size>
+       </property>
+       <property name="value">
+        <number>0</number>
+       </property>
+      </widget>
      </item>
      <item row="2" column="1">
       <widget class="QPushButton" name="calc">
@@ -445,23 +471,42 @@
        </property>
       </widget>
      </item>
+     <item row="2" column="0">
+      <spacer name="verticalSpacer_4">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Maximum</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>10</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="2" column="7">
+      <spacer name="verticalSpacer_5">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Maximum</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>17</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
      <item row="2" column="6">
       <widget class="QPushButton" name="detail">
        <property name="text">
         <string>查看详情</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="4">
-      <widget class="QPushButton" name="clear">
-       <property name="maximumSize">
-        <size>
-         <width>80</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>清除</string>
        </property>
       </widget>
      </item>
@@ -516,31 +561,21 @@
        </property>
       </widget>
      </item>
-     <item row="6" column="0" colspan="8">
-      <widget class="QProgressBar" name="progressBar">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
+     <item row="2" column="5">
+      <spacer name="verticalSpacer_3">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
        </property>
-       <property name="maximumSize">
+       <property name="sizeType">
+        <enum>QSizePolicy::Maximum</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
         <size>
-         <width>16777215</width>
-         <height>20</height>
+         <width>58</width>
+         <height>17</height>
         </size>
        </property>
-       <property name="value">
-        <number>0</number>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="3" colspan="2">
-      <widget class="QComboBox" name="seeds">
-       <property name="editable">
-        <bool>true</bool>
-       </property>
-      </widget>
+      </spacer>
      </item>
      <item row="1" column="3" colspan="2">
       <widget class="QLabel" name="label_10">
@@ -569,62 +604,27 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="0">
-      <spacer name="verticalSpacer_4">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeType">
-        <enum>QSizePolicy::Maximum</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
+     <item row="4" column="4">
+      <widget class="QPushButton" name="clear">
+       <property name="maximumSize">
         <size>
-         <width>40</width>
-         <height>10</height>
+         <width>80</width>
+         <height>16777215</height>
         </size>
        </property>
-      </spacer>
-     </item>
-     <item row="2" column="7">
-      <spacer name="verticalSpacer_5">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+       <property name="text">
+        <string>清除</string>
        </property>
-       <property name="sizeType">
-        <enum>QSizePolicy::Maximum</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>17</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item row="5" column="0" colspan="7">
-      <spacer name="horizontalSpacer_2">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeType">
-        <enum>QSizePolicy::Fixed</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>208</width>
-         <height>13</height>
-        </size>
-       </property>
-      </spacer>
+      </widget>
      </item>
     </layout>
    </widget>
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>150</x>
+      <x>154</x>
       <y>175</y>
-      <width>431</width>
+      <width>451</width>
       <height>31</height>
      </rect>
     </property>
@@ -669,7 +669,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>600</width>
+     <width>620</width>
      <height>26</height>
     </rect>
    </property>

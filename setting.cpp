@@ -105,5 +105,5 @@ void Setting::on_submit_clicked()
     for (int i = 1; i <= 19; ++i)
         _zombie_flags[i] = this->findChild<QCheckBox *>("checkBox_" + QString::number(i))->isChecked();
     this->close();
-    std::cout << _seed_span;
+    //std::cout << _seed_span;
 }

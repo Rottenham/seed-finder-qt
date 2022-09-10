@@ -55,7 +55,7 @@
     </font>
    </property>
    <property name="text">
-    <string>植物大战僵尸生存无尽模式种子寻找器 v1.1</string>
+    <string>植物大战僵尸生存无尽模式种子寻找器 v1.2</string>
    </property>
    <property name="textFormat">
     <enum>Qt::RichText</enum>
